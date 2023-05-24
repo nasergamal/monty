@@ -79,25 +79,19 @@ void rotl(stack_t **stack, unsigned int line_number __attribute__((unused)))
 void rotr(stack_t **stack, unsigned int line_number __attribute__((unused)))
 {
 	stack_t *ptr;
-	int val, inival;
 
 	if (stack == NULL || *stack == NULL)
 		return;
 	ptr = *stack;
-	val = ptr->n;
-	ptr = ptr->next;
 	while (ptr->next != NULL)
 	{
-		inival = ptr->n;
-		ptr->n = val;
-		val = inival;
 		ptr = ptr->next;
 	}
-	if (ptr != NULL)
-	{
-		(*stack)->n = ptr->n;
-		ptr->n = val;
-	}
+	(*stack)->prev = ptr;
+	ptr->next = (*stack);
+	ptr->prev->next = NULL;
+	ptr->prev = NULL;
+	*stack = ptr;
 }
 /**
  * free_stuff - close files and free mem of global variables and linked list
