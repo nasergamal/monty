@@ -12,10 +12,12 @@ void pchar(stack_t **stack, unsigned int line_number)
 	if (stack == NULL || *stack == NULL)
 	{
 		fprintf(stderr, "L%d: can't pchar, stack empty\n", line_number);
+		free_stuff(stack);
 		exit(EXIT_FAILURE); }
 	if ((*stack)->n > 127 || (*stack)->n < 33)
 	{
 		fprintf(stderr, "L%d: can't pchar, value out of range", line_number);
+		free_stuff(stack);
 		exit(EXIT_FAILURE); }
 	fprintf(stdout, "%c\n", ((*stack)->n));
 }
@@ -33,6 +35,7 @@ void pstr(stack_t **stack, unsigned int line_number)
 	if (stack == NULL || *stack == NULL)
 	{
 		fprintf(stderr, "L%d: can't pchar, stack empty\n", line_number);
+		free_stuff(stack);
 		exit(EXIT_FAILURE); }
 	ptr = *stack;
 	while (ptr)
@@ -44,6 +47,7 @@ void pstr(stack_t **stack, unsigned int line_number)
 		if (ptr->n > 127 || ptr->n < 33)
 		{
 			fprintf(stderr, "L%d: can't pstr, value out of range", line_number);
+			free_stuff(stack);
 			exit(EXIT_FAILURE); }
 		fprintf(stdout, "%c", ptr->n);
 		ptr = ptr->next;
@@ -72,4 +76,15 @@ void rotl(stack_t **stack, unsigned int line_number __attribute__((unused)))
 		ptr->n = ptr->next->n;
 		ptr = ptr->next;
 		ptr->n = val; }
+}
+/**
+ * free_stuff - close files and free mem of global variables and linked list
+ * @stack: linked list
+ * Return: void
+ */
+void free_stuff(stack_t **stack)
+{
+	fclose(s.fp);
+	free(s.cmdline);
+	freestack(stack);
 }

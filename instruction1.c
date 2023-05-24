@@ -14,18 +14,22 @@ void push(stack_t **stack, unsigned int line_number)
 	char *ptr;
 
 	errno = 0;
-	newvalue = (int)strtol(id2, &ptr, 10);
+	if (!(s.id2))
+	{	fprintf(stderr, "L%d: usage: push integer\n", line_number);
+		free_stuff(stack);
+		exit(EXIT_FAILURE); }
+	newvalue = (int)strtol(s.id2, &ptr, 10);
 	if (errno)
 	{
 		fprintf(stderr, "L%d: usage: push integer\n", line_number);
-		freestack(stack);
+		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
 	newptr = malloc(sizeof(stack_t));
 	if (newptr == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
-		freestack(stack);
+		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
 	newptr->n = newvalue;
@@ -49,9 +53,6 @@ void pall(stack_t **stack, unsigned int line_number __attribute__((unused)))
 {
 	stack_t *ptr;
 
-	if (stack == NULL || *stack == NULL)
-
-		return;
 	ptr = *stack;
 	while (ptr)
 	{
@@ -71,6 +72,7 @@ void pint(stack_t **stack, unsigned int line_number)
 	if (stack == NULL || *stack == NULL)
 	{
 		fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
+		free_stuff(stack);
 		exit(EXIT_FAILURE); }
 	fprintf(stdout, "%d\n", (*stack)->n);
 }
@@ -88,6 +90,7 @@ void pop(stack_t **stack, unsigned int line_number)
 	if (stack == NULL || *stack == NULL)
 	{
 		fprintf(stderr, "L%d: can't pop an empty stack", line_number);
+		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
 	ptr = *stack;
@@ -110,6 +113,7 @@ void swap(stack_t **stack, unsigned int line_number)
 	if (stack == NULL || *stack == NULL || (*stack)->next == NULL)
 	{
 		fprintf(stderr, "L%d: can't swap, stack too short", line_number);
+		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
 	val = (*stack)->n;
