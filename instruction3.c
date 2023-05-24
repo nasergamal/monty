@@ -14,7 +14,7 @@ void pchar(stack_t **stack, unsigned int line_number)
 		fprintf(stderr, "L%d: can't pchar, stack empty\n", line_number);
 		free_stuff(stack);
 		exit(EXIT_FAILURE); }
-	if ((*stack)->n > 127 || (*stack)->n < 33)
+	if ((*stack)->n > 127 || (*stack)->n <= 0)
 	{
 		fprintf(stderr, "L%d: can't pchar, value out of range", line_number);
 		free_stuff(stack);
@@ -44,7 +44,7 @@ void pstr(stack_t **stack, unsigned int line_number)
 		{
 			fprintf(stdout, "\n");
 			return; }
-		if (ptr->n > 127 || ptr->n < 33)
+		if (ptr->n > 127 || ptr->n <= 0)
 		{
 			fprintf(stderr, "L%d: can't pstr, value out of range", line_number);
 			free_stuff(stack);
@@ -55,7 +55,7 @@ void pstr(stack_t **stack, unsigned int line_number)
 	fprintf(stdout, "\n");
 }
 /**
- * rotl - rotate the whole linked list
+ * rotl - move the first node to the end of linked list
  * @stack: linked list
  * @line_number: line count in the file being read
  *
@@ -69,13 +69,39 @@ void rotl(stack_t **stack, unsigned int line_number __attribute__((unused)))
 	if (stack == NULL || *stack == NULL)
 		return;
 	ptr = *stack;
-	val = ptr->n;
 	while (ptr->next != NULL)
 	{
 		val = ptr->n;
 		ptr->n = ptr->next->n;
 		ptr = ptr->next;
 		ptr->n = val; }
+}
+/**
+ * rotr - rotate the linked list
+ * @stack: linked list
+ * @line_number: line count in the file being read
+ *
+ * Return: void
+ */
+void rotr(stack_t **stack, unsigned int line_number __attribute__((unused)))
+{
+	stack_t *ptr;
+	int val, inival;
+
+	if (stack == NULL || *stack == NULL)
+		return;
+	ptr = *stack;
+	val = ptr->n;
+	ptr = ptr->next;
+	while (ptr->next != NULL)
+	{
+		inival = ptr->n;
+		ptr->n = val;
+		val = inival;
+		ptr = ptr->next;
+	}
+	(*stack)->n = ptr->n;
+	ptr->n = val;
 }
 /**
  * free_stuff - close files and free mem of global variables and linked list

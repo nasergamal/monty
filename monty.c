@@ -45,20 +45,11 @@ int main(int ac, char **av)
 void process_line(stack_t **stack, unsigned int line)
 {
 	instruction_t st[] = {
-		{"push", push},
-		{"pall", pall},
-		{"pint", pint},
-		{"pop", pop},
-		{"swap", swap},
-		{"add", add},
-		{"sub", sub},
-		{"div", _div},
-		{"mul", mul},
-		{"mod", mod},
-		{"pchar", pchar},
-		{"pstr", pstr},
-		{"rotl", rotl},
-		{NULL, NULL},
+		{"push", push},	{"pall", pall},	{"pint", pint},
+		{"pop", pop}, {"swap", swap}, {"add", add},
+		{"sub", sub}, {"div", _div}, {"mul", mul},
+		{"mod", mod}, {"pchar", pchar},	{"pstr", pstr},
+		{"rotl", rotl},	{"rotr", rotr},	{NULL, NULL},
 	};
 	int i;
 	char *token, *del = " \t\n";

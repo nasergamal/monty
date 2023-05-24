@@ -59,6 +59,10 @@ void _div(stack_t **stack, unsigned int line_number)
 		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
+	if ((*stack)->n == 0)
+	{
+		fprintf(stderr, "L%d: division by zero\n", line_number);
+		free_stuff(stack), exit(EXIT_FAILURE); }
 	val = (*stack)->next->n / (*stack)->n;
 	(*stack)->next->n = val;
 	pop(stack, line_number);
@@ -101,6 +105,10 @@ void mod(stack_t **stack, unsigned int line_number)
 		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
+	if ((*stack)->n == 0)
+	{
+		fprintf(stderr, "L%d: division by zero\n", line_number);
+		free_stuff(stack), exit(EXIT_FAILURE); }
 	val = (*stack)->next->n % (*stack)->n;
 	(*stack)->next->n = val;
 	pop(stack, line_number);
