@@ -27,7 +27,7 @@ int main(int ac, char **av)
 		fprintf(stderr, "Error: Can't open file %s\n", av[1]);
 		exit(EXIT_FAILURE);
 	}
-	while ((ch_count = getline(&(s.cmdline), &bs, s.fp)) > 1)
+	while ((ch_count = getline(&(s.cmdline), &bs, s.fp)) > 0)
 	{
 		process_line(&stack, line);
 		line++;
@@ -61,25 +61,29 @@ void process_line(stack_t **stack, unsigned int line)
 		{NULL, NULL},
 	};
 	int i;
-	char *token;
-	char *del = " \t\n";
+	char *token, *del = " \t\n";
 
 	token = strtok(s.cmdline, del);
 	if (token && token[0] == '#')
 		return;
 	s.id2 = strtok(NULL, del);
+	if (!token || !strcmp(token, "nop"))
+		return;
+	if (!strcmp(token, "stack"))
+	{       s.queue = 0;
+		return; }
+	if (!strcmp(token, "queue"))
+	{       s.queue = 1;
+		return; }
 	for (i = 0; st[i].opcode && token; i++)
 	{
-		if (!strcmp(token, "nop"))
-			return;
 		if (!strcmp(st[i].opcode, token))
 		{	st[i].f(stack, line);
 			return; }
 	}
 	if (st[i].opcode == NULL)
 	{	fprintf(stderr, "L%d: unknown instruction %s\n", line, token);
-		free_stuff(stack);
-		exit(EXIT_FAILURE); }
+		free_stuff(stack), exit(EXIT_FAILURE); }
 }
 /**
  * freestack - free linked list

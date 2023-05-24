@@ -10,37 +10,42 @@
 void push(stack_t **stack, unsigned int line_number)
 {
 	int newvalue;
-	stack_t *newptr;
+	stack_t *newptr, *sptr = NULL;
 	char *ptr;
 
 	errno = 0;
 	if (!(s.id2))
 	{	fprintf(stderr, "L%d: usage: push integer\n", line_number);
-		free_stuff(stack);
-		exit(EXIT_FAILURE); }
+		free_stuff(stack), exit(EXIT_FAILURE); }
 	newvalue = (int)strtol(s.id2, &ptr, 10);
 	if (errno)
 	{
 		fprintf(stderr, "L%d: usage: push integer\n", line_number);
-		free_stuff(stack);
-		exit(EXIT_FAILURE);
+		free_stuff(stack), exit(EXIT_FAILURE);
 	}
 	newptr = malloc(sizeof(stack_t));
 	if (newptr == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
-		free_stuff(stack);
-		exit(EXIT_FAILURE);
+		free_stuff(stack), exit(EXIT_FAILURE);
 	}
 	newptr->n = newvalue;
-	newptr->prev = NULL;
-	newptr->next = NULL;
-	if (!(*stack == NULL))
-	{
-		newptr->next = *stack;
+	newptr->prev = newptr->next = NULL;
+	if (*stack == NULL)
+	{	*stack = newptr;
+		return; }
+	if (!(s.queue))
+	{	newptr->next = *stack;
 		(*stack)->prev = newptr;
+		*stack = newptr; }
+	else
+	{	sptr = *stack;
+		while (sptr->next != NULL)
+		{	sptr = sptr->next; }
+		sptr->next = newptr;
+		newptr->prev = sptr;
 	}
-	*stack = newptr;
+
 }
 /**
  * pall - print stack content
