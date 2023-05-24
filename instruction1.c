@@ -9,20 +9,24 @@
  */
 void push(stack_t **stack, unsigned int line_number)
 {
-	int newvalue;
+	int newvalue, i = 0;
 	stack_t *newptr, *sptr = NULL;
-	char *ptr;
 
-	errno = 0;
-	if (!(s.id2))
+	if (s.id2)
+	{
+		if (s.id2[i] == '-')
+			i++;
+		for (; s.id2[i]; i++)
+		{
+			if (s.id2[i] > 57 || s.id2[i] < 48)
+			{	fprintf(stderr, "L%d: usage: push integer\n", line_number);
+				free_stuff(stack), exit(EXIT_FAILURE); }
+		}
+	}	
+	else
 	{	fprintf(stderr, "L%d: usage: push integer\n", line_number);
 		free_stuff(stack), exit(EXIT_FAILURE); }
-	newvalue = (int)strtol(s.id2, &ptr, 10);
-	if (errno)
-	{
-		fprintf(stderr, "L%d: usage: push integer\n", line_number);
-		free_stuff(stack), exit(EXIT_FAILURE);
-	}
+	newvalue = atoi(s.id2);
 	newptr = malloc(sizeof(stack_t));
 	if (newptr == NULL)
 	{
@@ -45,7 +49,6 @@ void push(stack_t **stack, unsigned int line_number)
 		sptr->next = newptr;
 		newptr->prev = sptr;
 	}
-
 }
 /**
  * pall - print stack content
@@ -90,11 +93,11 @@ void pint(stack_t **stack, unsigned int line_number)
  */
 void pop(stack_t **stack, unsigned int line_number)
 {
-	stack_t *ptr;
+	stack_t *ptr = NULL;
 
 	if (stack == NULL || *stack == NULL)
 	{
-		fprintf(stderr, "L%d: can't pop an empty stack", line_number);
+		fprintf(stderr, "L%d: can't pop an empty stack\n", line_number);
 		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
@@ -117,7 +120,7 @@ void swap(stack_t **stack, unsigned int line_number)
 
 	if (stack == NULL || *stack == NULL || (*stack)->next == NULL)
 	{
-		fprintf(stderr, "L%d: can't swap, stack too short", line_number);
+		fprintf(stderr, "L%d: can't swap, stack too short\n", line_number);
 		free_stuff(stack);
 		exit(EXIT_FAILURE);
 	}
